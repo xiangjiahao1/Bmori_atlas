@@ -30,7 +30,7 @@ indim.usage <- as.numeric(if(!is.null(args$indim)) args$indim else 30)
 #循环建立path向量
 path.list <- read.table(args$input)
 for (line in path.list){line}
-#循环读取rds文件,seurat对象名必须是 S1_lib2_QCed这样的格式
+#cycle read rds files,seurat object musht be "S1_lib1_QCed"
 for (i in line){
 abc=strsplit(i,split="/")
 id <- abc[[1]][lengths(abc)]
@@ -225,8 +225,6 @@ Bmor.integrated$sample <- vapply( colnames(Bmor.integrated), function(x) strspli
 
 Bmor.integrated$sample <- factor(Bmor.integrated$sample)
 
-Bmor.integrated$single <- vapply( Bmor.integrated$single, function(x) gsub("S1_lib5","s10",x)[[1]][1], FUN.VALUE = as.character(1))
-Bmor.integrated$single <- vapply( Bmor.integrated$single, function(x) gsub("S1_lib6","s10",x)[[1]][1], FUN.VALUE = as.character(1))
 
 
 pdf(paste0(args$out,'/split_tsne.pdf'),height=20,width=180)
