@@ -27,7 +27,7 @@ tn.usage <- as.numeric(if(!is.null(args$tn)) args$tn else 20)
 sp.usage <- as.numeric(if(!is.null(args$sp)) args$sp else 30)
 indim.usage <- as.numeric(if(!is.null(args$indim)) args$indim else 30)
 
-#循环建立path向量
+# bulding path vector
 path.list <- read.table(args$input)
 for (line in path.list){line}
 #cycle read rds files,seurat object musht be "S1_lib1_QCed"
@@ -38,7 +38,7 @@ del_id <- as.vector((strsplit(id,split = "\\.")[[1]]))[1]
 assign(del_id ,readRDS(i))
 }
 
-#建立seurat list对象
+#building seurat object list
 id.list <- c()
 for (i in grep(ls(),pattern = 'QCed',value=TRUE)) { id.list <- append(id.list,i)}
 rds.list <- lapply(id.list, get)
@@ -58,11 +58,11 @@ rds.list <- lapply(X = rds.list, FUN = function(x) {
 anchors <- FindIntegrationAnchors(object.list = rds.list, normalization.method = "SCT", anchor.features = features, dims = 1:adim.usage, reduction = "rpca", k.filter = 200)
 Bmor.integrated <- IntegrateData(anchorset = anchors, normalization.method = "SCT", dims = 1:indim.usage)
 
-
+#top30 hvg list
 write.table(Bmor.integrated@assays[["integrated"]]@var.features, paste0(args$out,'/sct_variable.txt'),sep = '\t',row.names =FALSE, col.names =FALSE,quote =FALSE)
-#看top30的高变基因有哪些
+
 save.image(paste0(args$out,"/only_integrete.RData"))
-#做pca，且画出前20PCA热图
+
 Bmor.integrated <- RunPCA(Bmor.integrated, npcs = dim.usage)
 pdf(paste0(args$out,"/sct_PCA_DimHeatmap.pdf"))
 DimHeatmap(Bmor.integrated, dims = 1:20, cells = 100, balanced = TRUE)
